@@ -8,7 +8,8 @@
 ## ✨ Features
 
 - **Smart Analysis** - Analyzes git diff to understand what changed
-- **AI Suggestions** - Uses Gemini API to generate conventional commit messages
+- **Multi-Provider** - Support for Gemini, OpenAI, and Anthropic Claude
+- **AI Suggestions** - Generate conventional commit messages from any LLM
 - **Interactive Editor** - Review and edit suggestions in a beautiful float window
 - **Auto-Staging** - Automatically prompts to stage unstaged changes
 - **Conventional Format** - Follows [Conventional Commits](https://www.conventionalcommits.org/) specification
@@ -74,24 +75,62 @@ require("commit").setup({
 })
 ```
 
-## 🤖 LLM Models
-### 1. Gemini
-Default: `gemini-2.5-flash` (recommended)
+## 🤖 LLM Providers
 
-To use a different model:
+### 1. Gemini (Default)
+
+Default model: `gemini-2.5-flash`
 
 ```lua
 require("commit").setup({
-  model = "gemini-2.0-flash",  -- or other available models
+  provider = "gemini",
+  api_key = vim.env.GEMINI_API_KEY,
+  model = "gemini-2.5-flash",  -- or gemini-2.0-flash, gemini-2.0-flash-lite
 })
 ```
 
-Available models:
-- `gemini-2.5-flash`
-- `gemini-2.0-flash`
-- `gemini-2.0-flash-lite`
+**Environment variable:**
+```bash
+export GEMINI_API_KEY="your-api-key"
+```
 
-### 2. AIs (Comming soon)
+### 2. OpenAI (GPT-4o / GPT-4o-mini)
+
+Default model: `gpt-4o-mini`
+
+```lua
+require("commit").setup({
+  provider = "openai",
+  api_key = vim.env.OPENAI_API_KEY,
+  model = "gpt-4o-mini",  -- or gpt-4o
+})
+```
+
+**Environment variable:**
+```bash
+export OPENAI_API_KEY="sk-..."
+```
+
+### 3. Anthropic (Claude)
+
+Default model: `claude-3-5-sonnet-20241022`
+
+```lua
+require("commit").setup({
+  provider = "anthropic",
+  api_key = vim.env.ANTHROPIC_API_KEY,
+  model = "claude-3-5-sonnet-20241022",
+})
+```
+
+**Environment variable:**
+```bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+```
+
+### 4. Ollama (Coming soon)
+
+Local models without API keys (llama2, llama3, neural-chat, etc.)
 
 
 ## 🔧 Commands
