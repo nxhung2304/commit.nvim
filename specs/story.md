@@ -116,11 +116,11 @@ Based on feedback from ChatGPT, Gemini, and internal codebase audit.
 ## v1.0.0 — Multi-Provider Support
 
 > Architecture already supports this via `lua/commit/llm/` abstraction.
-- [ ] **OpenAI** (`lua/commit/llm/openai.lua`) — GPT-4o
-- [ ] **Anthropic** (`lua/commit/llm/claude.lua`) — Claude
-- [ ] **Ollama** (`lua/commit/llm/ollama.lua`) — local models (llama3, qwen, etc.)
+- [x] **OpenAI** (`lua/commit/llm/openai.lua`) — GPT-4o
+- [x] **Anthropic** (`lua/commit/llm/claude.lua`) — Claude
+- [x] **Ollama** (`lua/commit/llm/ollama.lua`) — local models (llama3, qwen, etc.)
   - High priority: enterprise users with air-gap / no-cloud policies
-- [ ] Provider selection via `setup({ provider = "ollama", model = "llama3" })`
+- [x] Provider selection via `setup({ provider = "openai|anthropic|gemini", model = "..." })`
 
 ---
 
@@ -153,7 +153,7 @@ Based on feedback from ChatGPT, Gemini, and internal codebase audit.
 | v0.3.0 | Core UX improvements | **Done** |
 | v0.4.0 | Testing & CI | **Done** |
 | v0.5.0 | Fugitive + Neogit integration | **Done** |
-| v0.6.0 | Interactive UI | Planned |
-| v1.0.0 | Multi-provider | Planned |
+| v0.6.0 | Interactive UI | Done |
+| v1.0.0 | Multi-provider | **Done** |
 | v1.1.0 | Git intelligence | Planned |
 | v2.0.0 | Team mode | Future |
