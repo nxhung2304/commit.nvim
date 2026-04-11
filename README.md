@@ -134,7 +134,7 @@ require("commit").setup({
 ```lua
 require("commit").setup({
   api_key = vim.env.GEMINI_API_KEY,
-  prompt_suffix = "If a JIRA ticket number is in the branch name, prefix the subject with it.",
+  prompt_suffix = "Always use past tense. If a JIRA ticket appears in the branch name, prefix the subject with it.",
 })
 ```
 

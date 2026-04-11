@@ -9,8 +9,9 @@ CONTENTS                                                    *commit.nvim-toc*
   4. Configuration ................ |commit.nvim-configuration|
   5. Commands ..................... |commit.nvim-commands|
   6. Keymaps ...................... |commit.nvim-keymaps|
-  7. Providers .................... |commit.nvim-providers|
-  8. Troubleshooting .............. |commit.nvim-troubleshooting|
+  7. Custom Rules ................. |commit.nvim-custom-rules|
+  8. Providers .................... |commit.nvim-providers|
+  9. Troubleshooting .............. |commit.nvim-troubleshooting|
 
 ==============================================================================
 1. INTRODUCTION                                           *commit.nvim-intro*
@@ -77,8 +78,9 @@ Options ~
                              Uses git pathspec `:(exclude)` syntax.
                              Example: `{ "package-lock.json", "*.min.js" }`
   prompt_suffix     string   Extra instructions appended to the prompt.
-                             Useful for ticket refs, language preferences, etc.
-                             Example: `"Always write in English."`
+                             Useful for ticket refs, language preferences, scope
+                             restrictions, and custom commit rules.
+                             See |commit.nvim-custom-rules| for examples.
 
 Full example: >lua
   require("commit").setup({
@@ -115,9 +117,57 @@ The following keymaps are active only inside the commit.nvim float window:
   <Esc>   Cancel without committing.
   <C-r>   Discard the current suggestion and request a new one from the LLM.
           Works in both normal and insert mode.
+  <Tab>   (v0.6.0+) Move focus to the next field in the form.
+  <S-Tab> (v0.6.0+) Move focus to the previous field in the form.
 
 ==============================================================================
-7. PROVIDERS                                          *commit.nvim-providers*
+7. CUSTOM RULES                                       *commit.nvim-custom-rules*
+
+Use the `prompt_suffix` configuration option to enforce project-specific commit
+message rules. The suffix is appended to the LLM prompt, allowing you to guide
+the AI toward your preferred commit style without changing the core plugin code.
+
+Basic example: >lua
+  require("commit").setup({
+    api_key = vim.env.GEMINI_API_KEY,
+    prompt_suffix = "Always write commit messages in past tense.",
+  })
+<
+
+More practical examples:
+
+1. Enforce past tense: >lua
+  prompt_suffix = "Write all verbs in past tense: 'added', 'fixed', 'refactored'."
+<
+
+2. Include issue/ticket numbers: >lua
+  prompt_suffix = "If the branch name contains a ticket number (e.g., PROJ-123), prefix the subject with it."
+<
+
+3. Restrict scopes to a whitelist: >lua
+  prompt_suffix = "Only use these scopes: api, ui, docs, tests, ci, chore. Never create custom scopes."
+<
+
+4. Enforce type constraints: >lua
+  prompt_suffix = "Never use 'chore' unless the change is in config, deps, or build files. Default to 'fix' or 'feat'."
+<
+
+5. Multiple rules at once: >lua
+  require("commit").setup({
+    api_key = vim.env.GEMINI_API_KEY,
+    prompt_suffix = [[
+Rules for this project:
+1. Use past tense: "added" not "add"
+2. Always explain WHY in bullets, not just WHAT changed
+3. Be specific: avoid vague words like "improve", "refactor", "fix"
+4. If fixing an issue, mention the issue number: "fixes #123"
+5. Scope must be one of: api, ui, docs, tests, ci, chore
+    ]]
+  })
+<
+
+==============================================================================
+8. PROVIDERS                                          *commit.nvim-providers*
 
 Currently supported:
 
@@ -131,7 +181,7 @@ To add a custom provider, create `lua/commit/llm/myprovider.lua` with a
 `lua/commit/llm/init.lua`.
 
 ==============================================================================
-8. TROUBLESHOOTING                                *commit.nvim-troubleshooting*
+9. TROUBLESHOOTING                                *commit.nvim-troubleshooting*
 
 commit.nvim: no API key found ~
   Set the environment variable before starting Neovim: >bash
