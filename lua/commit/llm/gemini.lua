@@ -55,9 +55,8 @@ function M.suggest(prompt, config, callback)
 
   local model = config.model or "gemini-2.0-flash"
   local url = string.format(
-    "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s",
-    model,
-    api_key
+    "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent",
+    model
   )
 
   local body = vim.json.encode({
@@ -65,34 +64,43 @@ function M.suggest(prompt, config, callback)
       { parts = { { text = prompt } } },
     },
     generationConfig = {
-      temperature = 0,
-      maxOutputTokens = 1000,
+      temperature = config.temperature or 0,
+      maxOutputTokens = config.max_output_tokens or 1000,
     },
   })
 
-  -- Ghi body ra file tạm để truyền vào curl
   local tmp = vim.fn.tempname()
   vim.fn.writefile(vim.split(body, "\n"), tmp)
 
+  local stdout_data = {}
+  local stderr_data = {}
+
   vim.fn.jobstart({
-    "curl", "-s", "-X", "POST",
+    "curl", "-s", "--max-time", "30",
+    "-X", "POST",
     "-H", "Content-Type: application/json",
+    "-H", "Authorization: Bearer " .. api_key,
     "-d", "@" .. tmp,
     url,
   }, {
     stdout_buffered = true,
+    stderr_buffered = true,
     on_stdout = function(_, data)
-      vim.fn.delete(tmp)
-      local raw = table.concat(data, "\n")
-      local result, err = parse_response(raw)
-      callback(result, err)
+      stdout_data = data
     end,
     on_stderr = function(_, data)
-      local msg = table.concat(data, "\n")
-      if msg ~= "" then
-        vim.fn.delete(tmp)
-        callback(nil, "curl error: " .. msg)
+      stderr_data = data
+    end,
+    on_exit = function(_, code)
+      vim.fn.delete(tmp)
+      if code ~= 0 then
+        local msg = table.concat(stderr_data, "\n")
+        callback(nil, "curl error (exit " .. code .. "): " .. msg)
+        return
       end
+      local raw = table.concat(stdout_data, "\n")
+      local result, err = parse_response(raw)
+      callback(result, err)
     end,
   })
 end

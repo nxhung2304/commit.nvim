@@ -3,11 +3,21 @@ local M = {}
 local config = {
   provider = "gemini",
   model = "gemini-2.5-flash",
-  api_key = nil, -- fallback: đọc từ GEMINI_API_KEY env
+  api_key = nil,
+  temperature = 0,
+  max_output_tokens = 1000,
 }
 
 function M.setup(opts)
   config = vim.tbl_deep_extend("force", config, opts or {})
+
+  local api_key = config.api_key or vim.env.GEMINI_API_KEY or os.getenv("GEMINI_API_KEY")
+  if not api_key then
+    vim.notify(
+      "commit.nvim: no API key found. Set GEMINI_API_KEY or pass api_key to setup()",
+      vim.log.levels.ERROR
+    )
+  end
 end
 
 function M.run()

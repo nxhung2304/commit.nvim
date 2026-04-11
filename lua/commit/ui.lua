@@ -31,15 +31,15 @@ function M.open(suggestion, on_confirm)
   for _, line in ipairs(lines) do
     max_width = math.max(max_width, #line)
   end
-  local width = math.min(math.max(max_width + 4, 60), vim.o.columns - 4)
-  local height = math.min(#lines + 4, vim.o.lines - 4)
+  local width = math.max(1, math.min(math.max(max_width + 4, 60), vim.o.columns - 4))
+  local height = math.max(1, math.min(#lines + 4, vim.o.lines - 4))
 
   local win = vim.api.nvim_open_win(buf, true, {
     relative = "editor",
     width = width,
     height = height,
-    row = math.floor((vim.o.lines - height) / 2),
-    col = math.floor((vim.o.columns - width) / 2),
+    row = math.max(0, math.floor((vim.o.lines - height) / 2)),
+    col = math.max(0, math.floor((vim.o.columns - width) / 2)),
     style = "minimal",
     border = "rounded",
     title = " commit.nvim ",
