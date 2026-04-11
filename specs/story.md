@@ -77,21 +77,21 @@ Based on feedback from ChatGPT, Gemini, and internal codebase audit.
 
 ### Fugitive (`vim-fugitive`)
 
-- [ ] Auto-detect fugitive commit buffer open (`BufEnter` on `.git/COMMIT_EDITMSG`)
-- [ ] Pre-fill buffer with AI-generated message
-- [ ] Keybind (e.g. `<leader>ai`) inside commit buffer to trigger generation on demand
-- [ ] Opt-in via config: `setup({ fugitive = { enabled = true, auto_fill = false } })`
+- [x] Auto-detect fugitive commit buffer open (`BufEnter` on `.git/COMMIT_EDITMSG`)
+- [x] Pre-fill buffer with AI-generated message
+- [x] Keybind (e.g. `<leader>ai`) inside commit buffer to trigger generation on demand
+- [x] Opt-in via config: `setup({ fugitive = { enabled = true, auto_fill = false } })`
 
 ### Neogit
 
-- [ ] Hook into Neogit commit popup via its API / `autocmd`
-- [ ] Pre-fill commit message field with AI suggestion
-- [ ] User edits inline, confirms with Neogit's native flow
-- [ ] Opt-in via config: `setup({ neogit = { enabled = true } })`
+- [x] Hook into Neogit commit popup via its API / `autocmd`
+- [x] Pre-fill commit message field with AI suggestion
+- [x] User edits inline, confirms with Neogit's native flow
+- [x] Opt-in via config: `setup({ neogit = { enabled = true } })`
 
 ### Standalone
 
-- [ ] `:CommitSmart` — opens commit buffer, auto-fills, user confirms (fallback for users without Fugitive/Neogit)
+- [x] `:CommitSmart` — opens commit buffer, auto-fills, user confirms (fallback for users without Fugitive/Neogit)
 
 > Both integrations must be **opt-in** and **auto-detected** — no hard dependency on either plugin.
 
@@ -153,7 +153,7 @@ Based on feedback from ChatGPT, Gemini, and internal codebase audit.
 | v0.2.0 | Security & stability | **Done** |
 | v0.3.0 | Core UX improvements | **Done** |
 | v0.4.0 | Testing & CI | **Done** |
-| v0.5.0 | Fugitive + Neogit integration | Planned |
+| v0.5.0 | Fugitive + Neogit integration | **Done** |
 | v0.6.0 | Interactive UI | Planned |
 | v1.0.0 | Multi-provider | Planned |
 | v1.1.0 | Git intelligence | Planned |

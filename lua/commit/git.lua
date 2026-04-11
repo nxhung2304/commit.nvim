@@ -68,4 +68,12 @@ function M.do_commit(message)
   return true, result
 end
 
+function M.undo_last_commit()
+  local result = vim.fn.system({ "git", "reset", "HEAD~1", "--soft" })
+  if vim.v.shell_error ~= 0 then
+    return false, result
+  end
+  return true, "Last commit undone (changes are staged)"
+end
+
 return M
