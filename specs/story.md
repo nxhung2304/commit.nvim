@@ -42,23 +42,23 @@ Based on feedback from ChatGPT, Gemini, and internal codebase audit.
 
 ### Prompt & Context
 
-- [ ] Configurable diff size limit (default: 1200 chars) via `setup({ max_diff_chars = N })`
-- [ ] `exclude_patterns` config to skip lock files, minified files (e.g. `package-lock.json`, `*.min.js`)
-- [ ] Include filenames and function names in prompt for better AI context
-- [ ] Include recent `git log` (last 5 commits) in prompt to match repo style
-- [ ] Warn user when diff is truncated
+- [x] Configurable diff size limit (default: 1200 chars) via `setup({ max_diff_chars = N })`
+- [x] `exclude_patterns` config to skip lock files, minified files (e.g. `package-lock.json`, `*.min.js`)
+- [x] Include filenames and function names in prompt for better AI context
+- [x] Include recent `git log` (last 5 commits) in prompt to match repo style
+- [x] Warn user when diff is truncated
 
 ### UI
 
-- [ ] `<C-r>` keybind inside float window to regenerate suggestion
-- [ ] Show loading indicator while waiting for LLM response
-- [ ] `setup({ prompt_suffix = "..." })` for custom instructions (language, ticket refs, etc.)
+- [x] `<C-r>` keybind inside float window to regenerate suggestion
+- [x] Show loading indicator while waiting for LLM response
+- [x] `setup({ prompt_suffix = "..." })` for custom instructions (language, ticket refs, etc.)
 
 ### Documentation
 
-- [ ] Add `doc/commit.txt` (Vimdoc) — `:help commit.nvim`
+- [x] Add `doc/commit.txt` (Vimdoc) — `:help commit.nvim`
 - [ ] Add demo GIF to README
-- [ ] Add troubleshooting section to README
+- [x] Add troubleshooting section to README
 
 ---
 
@@ -150,8 +150,8 @@ Based on feedback from ChatGPT, Gemini, and internal codebase audit.
 | Version | Theme | Status |
 |---|---|---|
 | v0.1.0 | Working prototype | Done |
-| v0.2.0 | Security & stability | **Next — blocker** |
-| v0.3.0 | Core UX improvements | Planned |
+| v0.2.0 | Security & stability | **Done** |
+| v0.3.0 | Core UX improvements | **Done** |
 | v0.4.0 | Testing & CI | Planned |
 | v0.5.0 | Fugitive + Neogit integration | Planned |
 | v0.6.0 | Interactive UI | Planned |

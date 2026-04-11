@@ -102,11 +102,39 @@ require("commit").setup({
   -- Gemini API configuration
   provider = "gemini",
   model = "gemini-2.5-flash",
-  api_key = nil,  -- auto-reads from GEMINI_API_KEY env
-  
+  api_key = nil,           -- auto-reads from GEMINI_API_KEY env
+
   -- LLM behavior
-  temperature = 0,       -- 0 = deterministic, 1 = creative
+  temperature = 0,         -- 0 = deterministic, 1 = creative
   max_output_tokens = 1000,
+
+  -- Diff control
+  max_diff_chars = 1200,   -- max diff characters sent to LLM
+  exclude_patterns = {},   -- file patterns to exclude from diff
+                           -- e.g. { "package-lock.json", "*.min.js" }
+
+  -- Prompt customization
+  prompt_suffix = nil,     -- extra instructions appended to the prompt
+                           -- e.g. "Always write commit messages in English."
+})
+```
+
+### Example: Exclude lock files and minified assets
+
+```lua
+require("commit").setup({
+  api_key = vim.env.GEMINI_API_KEY,
+  max_diff_chars = 2000,
+  exclude_patterns = { "package-lock.json", "yarn.lock", "*.min.js", "*.min.css" },
+})
+```
+
+### Example: Custom prompt instructions
+
+```lua
+require("commit").setup({
+  api_key = vim.env.GEMINI_API_KEY,
+  prompt_suffix = "If a JIRA ticket number is in the branch name, prefix the subject with it.",
 })
 ```
 
@@ -115,3 +143,64 @@ require("commit").setup({
 | Command | Description |
 |---------|-------------|
 | `:Commit` | Generate and commit with AI suggestion |
+
+## ⌨️ Keymaps (inside float window)
+
+| Key | Action |
+|-----|--------|
+| `<CR>` | Confirm message and commit |
+| `<Esc>` | Cancel without committing |
+| `<C-r>` | Regenerate a new suggestion from the LLM |
+
+## 🔍 Troubleshooting
+
+### "no API key found"
+
+Set the environment variable before launching Neovim:
+
+```bash
+export GEMINI_API_KEY="your-key-here"
+```
+
+Or pass it directly in `setup()`:
+
+```lua
+require("commit").setup({ api_key = "your-key-here" })
+```
+
+### "Not inside a git repository"
+
+Run `:Commit` from a directory tracked by git. Check with:
+
+```bash
+git rev-parse --git-dir
+```
+
+### "diff truncated" warning
+
+Your diff exceeds `max_diff_chars`. Increase the limit or exclude noisy files:
+
+```lua
+require("commit").setup({
+  max_diff_chars = 3000,
+  exclude_patterns = { "package-lock.json", "yarn.lock" },
+})
+```
+
+### LLM returns unexpected output
+
+Check `:messages` for raw error output. Verify your API key and network connectivity:
+
+```bash
+echo $GEMINI_API_KEY
+curl -s "https://generativelanguage.googleapis.com/v1beta/models" \
+  -H "x-goog-api-key: $GEMINI_API_KEY" | head -c 200
+```
+
+### Neovim help
+
+After installing, access the built-in documentation with:
+
+```vim
+:help commit.nvim
+```

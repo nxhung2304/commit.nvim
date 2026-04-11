@@ -1,0 +1,174 @@
+*commit.nvim*  AI-powered conventional commit messages for Neovim
+
+==============================================================================
+CONTENTS                                                    *commit.nvim-toc*
+
+  1. Introduction ................. |commit.nvim-intro|
+  2. Requirements ................. |commit.nvim-requirements|
+  3. Installation ................. |commit.nvim-installation|
+  4. Configuration ................ |commit.nvim-configuration|
+  5. Commands ..................... |commit.nvim-commands|
+  6. Keymaps ...................... |commit.nvim-keymaps|
+  7. Providers .................... |commit.nvim-providers|
+  8. Troubleshooting .............. |commit.nvim-troubleshooting|
+
+==============================================================================
+1. INTRODUCTION                                           *commit.nvim-intro*
+
+commit.nvim generates AI-powered conventional commit messages by analyzing
+your staged git diff and using a large language model to suggest a well-
+formatted message following the Conventional Commits specification.
+
+Run |:Commit| to stage → analyze → suggest → review → commit in one step.
+
+==============================================================================
+2. REQUIREMENTS                                    *commit.nvim-requirements*
+
+- Neovim 0.7+
+- Git installed and accessible in PATH
+- Gemini API key (from https://aistudio.google.com/app/apikeys)
+- curl (for API requests)
+
+==============================================================================
+3. INSTALLATION                                     *commit.nvim-installation*
+
+lazy.nvim: >lua
+  {
+    "nxhung2304/commit.nvim",
+    config = function()
+      require("commit").setup({
+        api_key = vim.env.GEMINI_API_KEY,
+      })
+    end,
+  }
+<
+
+packer.nvim: >lua
+  use {
+    "nxhung2304/commit.nvim",
+    config = function()
+      require("commit").setup()
+    end,
+  }
+<
+
+vim-plug: >vim
+  Plug 'nxhung2304/commit.nvim'
+<
+
+==============================================================================
+4. CONFIGURATION                                   *commit.nvim-configuration*
+
+Call `require("commit").setup(opts)` with any of the following options:
+
+                                                         *commit.nvim-setup()*
+require("commit").setup({opts})
+
+Options ~
+
+  provider          string   LLM provider. Default: `"gemini"`
+  model             string   Model name. Default: `"gemini-2.5-flash"`
+  api_key           string   API key. Reads `$GEMINI_API_KEY` env if nil.
+  temperature       number   0 = deterministic, 1 = creative. Default: `0`
+  max_output_tokens number   Max tokens in LLM response. Default: `1000`
+  max_diff_chars    number   Max diff characters sent to LLM. Default: `1200`
+                             Increase for large changesets.
+  exclude_patterns  table    File patterns to exclude from diff analysis.
+                             Uses git pathspec `:(exclude)` syntax.
+                             Example: `{ "package-lock.json", "*.min.js" }`
+  prompt_suffix     string   Extra instructions appended to the prompt.
+                             Useful for ticket refs, language preferences, etc.
+                             Example: `"Always write in English."`
+
+Full example: >lua
+  require("commit").setup({
+    api_key = vim.env.GEMINI_API_KEY,
+    temperature = 0,
+    max_diff_chars = 2000,
+    exclude_patterns = { "package-lock.json", "yarn.lock", "*.min.js" },
+    prompt_suffix = "If a JIRA ticket number appears in the branch name, prefix the subject with it.",
+  })
+<
+
+==============================================================================
+5. COMMANDS                                           *commit.nvim-commands*
+
+                                                                    *:Commit*
+:Commit
+  Analyze staged changes, generate an AI commit message suggestion, open an
+  interactive float window for review/editing, then commit on confirmation.
+
+  Workflow:
+  1. Reads staged diff (respects |commit.nvim-configuration| `exclude_patterns`)
+  2. Collects changed filenames and recent git log for style context
+  3. Sends diff + context to the configured LLM provider
+  4. Warns if diff was truncated (see `max_diff_chars`)
+  5. Opens float window with the suggestion
+  6. User edits inline, then confirms with <CR> or regenerates with <C-r>
+
+==============================================================================
+6. KEYMAPS                                            *commit.nvim-keymaps*
+
+The following keymaps are active only inside the commit.nvim float window:
+
+  <CR>    Confirm the current message and perform the git commit.
+  <Esc>   Cancel without committing.
+  <C-r>   Discard the current suggestion and request a new one from the LLM.
+          Works in both normal and insert mode.
+
+==============================================================================
+7. PROVIDERS                                          *commit.nvim-providers*
+
+Currently supported:
+
+  gemini    Google Gemini API (default). Requires `$GEMINI_API_KEY`.
+            Models: `gemini-2.5-flash` (default), `gemini-2.0-flash`,
+                    `gemini-2.0-flash-lite`
+
+Additional providers (OpenAI, Anthropic, Ollama) are planned for v1.0.0.
+To add a custom provider, create `lua/commit/llm/myprovider.lua` with a
+`suggest(prompt, config, callback)` function and register it in
+`lua/commit/llm/init.lua`.
+
+==============================================================================
+8. TROUBLESHOOTING                                *commit.nvim-troubleshooting*
+
+commit.nvim: no API key found ~
+  Set the environment variable before starting Neovim: >bash
+    export GEMINI_API_KEY="your-key-here"
+<
+  Or pass it directly in setup(): >lua
+    require("commit").setup({ api_key = "your-key-here" })
+<
+
+Not inside a git repository ~
+  Run |:Commit| from inside a directory tracked by git. Verify with: >bash
+    git rev-parse --git-dir
+<
+
+Nothing to commit ~
+  Stage changes first with `git add`, or confirm when commit.nvim asks to
+  stage all changes.
+
+Diff truncated warning ~
+  Your diff exceeds `max_diff_chars` (default 1200). Increase the limit: >lua
+    require("commit").setup({ max_diff_chars = 3000 })
+<
+  Or exclude noisy files: >lua
+    require("commit").setup({
+      exclude_patterns = { "package-lock.json", "*.min.js" }
+    })
+<
+
+LLM returns unexpected / empty suggestion ~
+  Check `:messages` for raw error output from curl.
+  Verify your API key is valid: >bash
+    echo $GEMINI_API_KEY
+<
+  Check network connectivity and that the Gemini API is reachable.
+
+Commit message is empty after editing ~
+  If you delete all content in the float window and press <CR>, commit.nvim
+  will abort with an error. Keep at least a subject line.
+
+ vim:tw=78:ts=8:ft=help:norl:

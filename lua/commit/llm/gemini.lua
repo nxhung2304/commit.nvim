@@ -79,7 +79,7 @@ function M.suggest(prompt, config, callback)
     "curl", "-s", "--max-time", "30",
     "-X", "POST",
     "-H", "Content-Type: application/json",
-    "-H", "Authorization: Bearer " .. api_key,
+    "-H", "x-goog-api-key: " .. api_key,
     "-d", "@" .. tmp,
     url,
   }, {
