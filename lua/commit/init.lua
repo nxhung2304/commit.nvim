@@ -35,12 +35,24 @@ local config = {
 function M.setup(opts)
   config = vim.tbl_deep_extend("force", config, opts or {})
 
-  local api_key = config.api_key or vim.env.GEMINI_API_KEY or os.getenv("GEMINI_API_KEY")
-  if not api_key then
-    vim.notify(
-      "commit.nvim: no API key found. Set GEMINI_API_KEY or pass api_key to setup()",
-      vim.log.levels.ERROR
-    )
+  -- Validate API key based on provider
+  local provider = config.provider or "gemini"
+  local api_key_env = {
+    gemini = "GEMINI_API_KEY",
+    anthropic = "ANTHROPIC_API_KEY",
+    openai = "OPENAI_API_KEY",
+    ollama = nil, -- Ollama doesn't need an API key
+  }
+
+  local required_env = api_key_env[provider]
+  if required_env then
+    local api_key = config.api_key or vim.env[required_env] or os.getenv(required_env)
+    if not api_key then
+      vim.notify(
+        "commit.nvim: no API key found. Set " .. required_env .. " or pass api_key to setup()",
+        vim.log.levels.ERROR
+      )
+    end
   end
 
   local integrations = require("commit.integrations")

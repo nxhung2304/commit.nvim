@@ -116,7 +116,6 @@ Based on feedback from ChatGPT, Gemini, and internal codebase audit.
 ## v1.0.0 — Multi-Provider Support
 
 > Architecture already supports this via `lua/commit/llm/` abstraction.
-
 - [ ] **OpenAI** (`lua/commit/llm/openai.lua`) — GPT-4o
 - [ ] **Anthropic** (`lua/commit/llm/claude.lua`) — Claude
 - [ ] **Ollama** (`lua/commit/llm/ollama.lua`) — local models (llama3, qwen, etc.)

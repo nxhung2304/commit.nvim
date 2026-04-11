@@ -16,23 +16,8 @@
 
 ## 📦 Installation
 
-### [lazy.nvim](https://github.com/folke/lazy.nvim)
-
 ```lua
 {
-  "nxhung2304/commit.nvim",
-  config = function()
-    require("commit").setup({
-      api_key = vim.env.GEMINI_API_KEY, -- or set directly
-    })
-  end,
-}
-```
-
-### [packer.nvim](https://github.com/wbthomason/packer.nvim)
-
-```lua
-use {
   "nxhung2304/commit.nvim",
   config = function()
     require("commit").setup()
@@ -40,58 +25,6 @@ use {
 }
 ```
 
-### [vim-plug](https://github.com/junegunn/vim-plug)
-
-```vim
-Plug 'nxhung2304/commit.nvim'
-```
-
-## 🔑 Setup
-
-### Get Gemini API Key
-
-1. Go to [Google AI Studio](https://aistudio.google.com/app/apikeys)
-2. Click "Create API key in new project"
-3. Copy the API key
-
-### Configure Neovim
-
-**Option 1: Environment Variable (Recommended)**
-
-```bash
-export GEMINI_API_KEY="your-api-key-here"
-```
-
-Then in your Neovim config:
-
-```lua
-require("commit").setup()  -- auto-reads from env
-```
-
-**Option 2: Direct Config**
-
-```lua
-require("commit").setup({
-  api_key = "AIza...",
-})
-```
-
-## 🤖 LLM Models
-
-Default: `gemini-2.5-flash` (recommended)
-
-To use a different model:
-
-```lua
-require("commit").setup({
-  model = "gemini-2.0-flash",  -- or other available models
-})
-```
-
-Available models:
-- `gemini-2.5-flash` - Best quality (default)
-- `gemini-2.0-flash` - Fast alternative
-- `gemini-2.0-flash-lite` - Lightweight
 
 ## ⚙️ Configuration
 
@@ -119,24 +52,47 @@ require("commit").setup({
 })
 ```
 
-### Example: Exclude lock files and minified assets
+### Configure Neovim
+
+**Option 1: Environment Variable (Recommended)**
+
+```bash
+export GEMINI_API_KEY="your-api-key-here"
+```
+
+Then in your Neovim config:
+
+```lua
+require("commit").setup()  -- auto-reads from env
+```
+
+**Option 2: Direct Config**
 
 ```lua
 require("commit").setup({
-  api_key = vim.env.GEMINI_API_KEY,
-  max_diff_chars = 2000,
-  exclude_patterns = { "package-lock.json", "yarn.lock", "*.min.js", "*.min.css" },
+  api_key = "AIza...",
 })
 ```
 
-### Example: Custom prompt instructions
+## 🤖 LLM Models
+### 1. Gemini
+Default: `gemini-2.5-flash` (recommended)
+
+To use a different model:
 
 ```lua
 require("commit").setup({
-  api_key = vim.env.GEMINI_API_KEY,
-  prompt_suffix = "Always use past tense. If a JIRA ticket appears in the branch name, prefix the subject with it.",
+  model = "gemini-2.0-flash",  -- or other available models
 })
 ```
+
+Available models:
+- `gemini-2.5-flash`
+- `gemini-2.0-flash`
+- `gemini-2.0-flash-lite`
+
+### 2. AIs (Comming soon)
+
 
 ## 🔧 Commands
 
@@ -151,56 +107,4 @@ require("commit").setup({
 | `<CR>` | Confirm message and commit |
 | `<Esc>` | Cancel without committing |
 | `<C-r>` | Regenerate a new suggestion from the LLM |
-
-## 🔍 Troubleshooting
-
-### "no API key found"
-
-Set the environment variable before launching Neovim:
-
-```bash
-export GEMINI_API_KEY="your-key-here"
-```
-
-Or pass it directly in `setup()`:
-
-```lua
-require("commit").setup({ api_key = "your-key-here" })
-```
-
-### "Not inside a git repository"
-
-Run `:Commit` from a directory tracked by git. Check with:
-
-```bash
-git rev-parse --git-dir
-```
-
-### "diff truncated" warning
-
-Your diff exceeds `max_diff_chars`. Increase the limit or exclude noisy files:
-
-```lua
-require("commit").setup({
-  max_diff_chars = 3000,
-  exclude_patterns = { "package-lock.json", "yarn.lock" },
-})
-```
-
-### LLM returns unexpected output
-
-Check `:messages` for raw error output. Verify your API key and network connectivity:
-
-```bash
-echo $GEMINI_API_KEY
-curl -s "https://generativelanguage.googleapis.com/v1beta/models" \
-  -H "x-goog-api-key: $GEMINI_API_KEY" | head -c 200
-```
-
-### Neovim help
-
-After installing, access the built-in documentation with:
-
-```vim
-:help commit.nvim
-```
+| `<C-y>` | Coppy message to clipboard |
