@@ -54,7 +54,7 @@ function M.run()
   local git_log = git.get_recent_log(5)
 
   -- 3. Build prompt
-  local prompt, truncated = prompt_builder.build(diff, {
+  local prompt, _ = prompt_builder.build(diff, {
     max_diff_chars = config.max_diff_chars,
     prompt_suffix = config.prompt_suffix,
     filenames = filenames,

@@ -46,6 +46,9 @@ local function parse_response(raw)
   }, nil
 end
 
+-- Exposed for unit testing only
+M._parse_response = parse_response
+
 function M.suggest(prompt, config, callback)
   local api_key = config.api_key or vim.env.GEMINI_API_KEY or os.getenv("GEMINI_API_KEY")
   if not api_key then

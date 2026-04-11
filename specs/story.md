@@ -64,10 +64,10 @@ Based on feedback from ChatGPT, Gemini, and internal codebase audit.
 
 ## v0.4.0 — Testing & CI
 
-- [ ] Add `tests/` directory using `plenary.nvim`
-- [ ] Unit tests for: `git.lua`, `prompt.lua`, `llm/gemini.lua` (JSON parsing, fallback)
-- [ ] GitHub Actions workflow — run tests on push/PR
-- [ ] Lua linting via `luacheck` in CI
+- [x] Add `tests/` directory using `plenary.nvim`
+- [x] Unit tests for: `git.lua`, `prompt.lua`, `llm/gemini.lua` (JSON parsing, fallback)
+- [x] GitHub Actions workflow — run tests on push/PR
+- [x] Lua linting via `luacheck` in CI
 
 ---
 
@@ -152,7 +152,7 @@ Based on feedback from ChatGPT, Gemini, and internal codebase audit.
 | v0.1.0 | Working prototype | Done |
 | v0.2.0 | Security & stability | **Done** |
 | v0.3.0 | Core UX improvements | **Done** |
-| v0.4.0 | Testing & CI | Planned |
+| v0.4.0 | Testing & CI | **Done** |
 | v0.5.0 | Fugitive + Neogit integration | Planned |
 | v0.6.0 | Interactive UI | Planned |
 | v1.0.0 | Multi-provider | Planned |
