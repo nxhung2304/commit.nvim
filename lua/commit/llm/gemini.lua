@@ -13,8 +13,8 @@ local function parse_candidate_text(text)
       return nil
     end
 
-    -- Use fallback suggestion without bullets
-    suggestion = { type = t, subject = subj, bullets = {} }
+    -- Use fallback suggestion without bullets or scope
+    suggestion = { type = t, subject = subj, scope = "", bullets = {} }
   end
 
   if not suggestion.type or not suggestion.subject then
@@ -24,6 +24,7 @@ local function parse_candidate_text(text)
   return {
     type = suggestion.type,
     subject = suggestion.subject,
+    scope = suggestion.scope or "",
     bullets = suggestion.bullets or {},
   }
 end

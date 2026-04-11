@@ -2,7 +2,11 @@ local M = {}
 
 -- Build message lines from an LLM suggestion table
 local function suggestion_to_lines(suggestion)
-  local lines = { suggestion.type .. ": " .. suggestion.subject }
+  local scope = suggestion.scope or ""
+  local header = scope ~= ""
+    and (suggestion.type .. "(" .. scope .. "): " .. suggestion.subject)
+    or  (suggestion.type .. ": " .. suggestion.subject)
+  local lines = { header }
   if suggestion.bullets and #suggestion.bullets > 0 then
     table.insert(lines, "")
     for _, bullet in ipairs(suggestion.bullets) do
