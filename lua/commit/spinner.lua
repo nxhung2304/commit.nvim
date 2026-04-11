@@ -56,16 +56,13 @@ function M.start_notify(label)
   local timer = vim.loop.new_timer()
   local frame = 0
   local notif_id = nil
+  local stopped = false
 
   local function tick()
+    if stopped then return end
     frame = (frame % #FRAMES) + 1
     local msg = FRAMES[frame] .. " " .. label
-    if notif_id then
-      vim.notify(msg, vim.log.levels.INFO, { replace = notif_id })
-      notif_id = nil  -- reset after replace
-    else
-      notif_id = vim.notify(msg, vim.log.levels.INFO)
-    end
+    notif_id = vim.notify(msg, vim.log.levels.INFO, { replace = notif_id })
   end
 
   return {
@@ -74,6 +71,7 @@ function M.start_notify(label)
       timer:start(80, 80, vim.schedule_wrap(tick))
     end,
     stop = function(final_text)
+      stopped = true
       timer:stop()
       timer:close()
       if final_text then
