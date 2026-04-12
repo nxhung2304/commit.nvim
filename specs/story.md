@@ -120,7 +120,9 @@ Based on feedback from ChatGPT, Gemini, and internal codebase audit.
 - [x] **Anthropic** (`lua/commit/llm/claude.lua`) — Claude
 - [x] **Ollama** (`lua/commit/llm/ollama.lua`) — local models (llama3, qwen, etc.)
   - High priority: enterprise users with air-gap / no-cloud policies
-- [x] Provider selection via `setup({ provider = "openai|anthropic|gemini", model = "..." })`
+  - Supports remote VPS connections via `base_url` config
+  - Handles both streaming and non-streaming responses
+- [x] Provider selection via `setup({ provider = "openai|anthropic|gemini|ollama", model = "..." })`
 
 ---
 

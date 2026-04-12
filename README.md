@@ -8,12 +8,12 @@
 ## ✨ Features
 
 - **Smart Analysis** - Analyzes git diff to understand what changed
-- **Multi-Provider** - Support for Gemini, OpenAI, and Anthropic Claude
+- **Multi-Provider** - Support for Gemini, OpenAI, Anthropic Claude, and Ollama (local)
 - **AI Suggestions** - Generate conventional commit messages from any LLM
 - **Interactive Editor** - Review and edit suggestions in a beautiful float window
 - **Auto-Staging** - Automatically prompts to stage unstaged changes
 - **Conventional Format** - Follows [Conventional Commits](https://www.conventionalcommits.org/) specification
-- **Zero Config** - Works out of the box with just an API key
+- **Zero Config** - Works out of the box with just an API key (or local Ollama)
 
 ## 📦 Installation
 
@@ -128,9 +128,41 @@ require("commit").setup({
 export ANTHROPIC_API_KEY="sk-ant-..."
 ```
 
-### 4. Ollama (Coming soon)
+### 4. Ollama (Local Models)
 
-Local models without API keys (llama2, llama3, neural-chat, etc.)
+Run models locally without API keys. Perfect for air-gapped environments or data privacy.
+
+```lua
+require("commit").setup({
+  provider = "ollama",
+  model = "llama3",         -- or gemma2, qwen, mistral, codellama, etc.
+  base_url = "http://localhost:11434",  -- Ollama API endpoint
+})
+```
+
+**Using Ollama from a VPS:**
+
+```lua
+require("commit").setup({
+  provider = "ollama",
+  model = "gemma2:2b",
+  base_url = "http://your-vps-ip:11434",  -- Remote Ollama server
+})
+```
+
+**Setup Ollama:**
+
+1. Install Ollama: https://ollama.ai
+2. Pull a model:
+   ```bash
+   ollama pull llama3
+   ```
+3. Start Ollama server:
+   ```bash
+   ollama serve
+   ```
+
+**Available models:** `llama3`, `llama2`, `gemma2`, `qwen`, `mistral`, `codellama`, `neural-chat`, and more. See [Ollama models](https://ollama.ai/library).
 
 
 ## 🔧 Commands

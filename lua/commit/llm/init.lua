@@ -4,6 +4,7 @@ local providers = {
   gemini = require("commit.llm.gemini"),
   anthropic = require("commit.llm.claude"),
   openai = require("commit.llm.openai"),
+  ollama = require("commit.llm.ollama"),
 }
 
 function M.suggest(prompt, config, callback)
